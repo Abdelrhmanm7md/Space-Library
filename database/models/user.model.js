@@ -76,6 +76,10 @@ userSchema.pre("findOneAndUpdate", function () {
 });
 
 
-// userSchema.pre(/^find/, function () {
-// });
+userSchema.pre(/^find/, function () {
+  this.populate({
+    path: "faculty",
+    select: "name",
+  });
+});
 export const userModel = mongoose.model("user", userSchema);

@@ -3,7 +3,6 @@ import ApiFeature from "../../utils/apiFeature.js";
 import catchAsync from "../../utils/middleWare/catchAsyncError.js";
 
 const createDoctor = catchAsync(async (req, res, next) => {
-  req.body.createdBy = req.user._id;
     let newDoctor = new doctorModel(req.body);
     let addedDoctor = await newDoctor.save({ context: { query: req.query } });
     res.status(201).json({

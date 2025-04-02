@@ -5,7 +5,6 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const createFaculty = catchAsync(async (req, res, next) => {
-  req.body.createdBy = req.user._id;
   let newFaculty = new facultyModel(req.body);
   let addedFaculty = await newFaculty.save({ context: { query: req.query } });
 

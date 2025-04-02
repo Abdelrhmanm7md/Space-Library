@@ -15,9 +15,6 @@ const getAllUsersByAdmin = catchAsync(async (req, res, next) => {
     page: ApiFeat.page,
     totalPages: ApiFeat.totalPages,
     countAllUsers: await userModel.countDocuments(),
-    // countOwners: await userModel.countDocuments({ role: "66d33a4b4ad80e468f231f83" }),
-    // countContractors: await userModel.countDocuments({ role: "66d33ec44ad80e468f231f91" }),
-    // countConsultant: await userModel.countDocuments({ role: "66d33e7a4ad80e468f231f8d" }),
     results,
   });
 });
@@ -44,13 +41,8 @@ const updateUser = catchAsync(async (req, res, next) => {
     err = "لا يمكن التحديث! المستخدم غير موجود";
     message = "تم تحديث المستخدم بنجاح!";
   }
-  if (req.body.userType === "admin") {
-    req.body.access = {
-      create: true,
-      read: true,
-      edit: true,
-      delete: true,
-    };
+  if (req.body.userType == "admin") {
+    req.body.isApproved = true;
   }
   let results = await userModel.findByIdAndUpdate(id, req.body, {
     new: true,
@@ -87,7 +79,6 @@ const deleteUser = catchAsync(async (req, res, next) => {
     return res.status(404).json({ message: message_1 });
   }
 
-  user.userId = req.userId;
   await user.deleteOne();
 
   res.status(200).json({ message: message_2 });

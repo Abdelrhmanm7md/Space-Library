@@ -3,7 +3,6 @@ import ApiFeature from "../../utils/apiFeature.js";
 import catchAsync from "../../utils/middleWare/catchAsyncError.js";
 
 const createSubject = catchAsync(async (req, res, next) => {
-  req.body.createdBy = req.user._id;
     let newSubject = new subjectModel(req.body);
     let addedSubject = await newSubject.save({ context: { query: req.query } });
     res.status(201).json({
