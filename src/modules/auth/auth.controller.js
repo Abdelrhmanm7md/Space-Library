@@ -103,7 +103,7 @@ export const sendOTP = catchAsync(async (req, res, next) => {
       sendEmail(userData.email, text);
       let lastSignIn = new Date();
       req.lastSignIn = lastSignIn;
-      return res.json({ message: "success", userData, lastSignIn });
+      return res.json({ message: "success", lastSignIn });
     }
     return res.status(401).json({ message: err_email });
   } else {
@@ -186,21 +186,8 @@ export const forgetPassword = catchAsync(async (req, res, next) => {
     let { email } = req.body;
     let userData = await userModel.findOne({ email });
     if (!userData) return res.status(404).json({ message: err_email });
-    userData.verificationCode = generateUniqueId({
-      length: 4,
-      useLetters: false,
-    });
-    text += `${userData.verificationCode}`;
-    sendEmail(userData.email, text);
-    await userData.save();
-    let verificationCode = userData.verificationCode;
-    let id = userData._id;
-    let UserEmail = userData.email;
     return res.json({
-      message: "Verification Code",
-      verificationCode,
-      id,
-      UserEmail,
+      message: "Email Found successfully",
     });
   } else {
     return res.status(409).json({ message: err_email2 });

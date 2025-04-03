@@ -66,6 +66,15 @@ const userSchema = mongoose.Schema(
   { timestamps: true }
 );
 
+userSchema.set("toJSON", {
+  transform: function (doc, ret, options) {
+      if (!options.showVerificationCode) {
+          delete ret.verificationCode;  // Remove verificationCode unless specified
+      }
+      return ret;
+  }
+});
+
 userSchema.pre("findOneAndUpdate", function () {
   if (this._update.password) {
     this._update.password = bcrypt.hashSync(
