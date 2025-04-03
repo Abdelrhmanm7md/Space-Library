@@ -60,11 +60,9 @@ const updateSubject = catchAsync(async (req, res, next) => {
   req.body.isFirstTerm = req.body.term === "one";
 
   if (req.body.pushDoctors && Array.isArray(req.body.pushDoctors)) {
-    req.body.pushDoctors.forEach(doctorId => {
-      updatedSubject = subjectModel.findByIdAndUpdate(id, {
-        $push: { doctors: { $each: doctorId } }
-      }, { new: true });
-    });
+    await subjectModel.findByIdAndUpdate(id, {
+      $addToSet: { doctors: { $each: req.body.pushDoctors } }
+    }, { new: true });
   }
 
   if (req.body.pullDoctors && Array.isArray(req.body.pullDoctors)) {
