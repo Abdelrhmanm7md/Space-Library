@@ -24,7 +24,6 @@ const getAllDoctor = catchAsync(async (req, res, next) => {
 const getDoctorById = catchAsync(async (req, res, next) => {
   let { id } = req.params;
 
-  let products = await productModel.find({ productVariations: { $elemMatch: { Doctor: id } } });
   let Doctor = await doctorModel.find({_id:id});
   let message_1 = " Doctor not found!"
   if(req.query.lang == "ar"){
@@ -37,7 +36,6 @@ const getDoctorById = catchAsync(async (req, res, next) => {
   Doctor = JSON.parse(Doctor);
 Doctor=Doctor[0]
 
-Doctor.products = products;
   res.status(200).json({ message: "Done", Doctor });
 });
 const updateDoctor = catchAsync(async (req, res, next) => {
@@ -62,11 +60,8 @@ const updateDoctor = catchAsync(async (req, res, next) => {
 });
 const deleteDoctor = catchAsync(async (req, res, next) => {
   let { id } = req.params;
-if (id == process.env.WEBSITEDoctorID || id == process.env.MAINDoctor) {
-    return res.status(400).json({ message: "You can't delete main Doctor!" });
-  }
-  // Find the Doctor first
-  let Doctor = await doctorModel.findById(id);
+
+  let Doctor = await doctorModel.findByIdAndDelete(id)
   let message_1 = "Couldn't delete! Not found!"
   let message_2 = "Doctor deleted successfully!"
   if(req.query.lang == "ar"){
@@ -76,10 +71,6 @@ if (id == process.env.WEBSITEDoctorID || id == process.env.MAINDoctor) {
   if (!Doctor) {
     return res.status(404).json({ message: message_1 });
   }
-
-  // ✅ Attach DoctorId before deleting
-  Doctor.userId = req.userId;
-  await Doctor.deleteOne();
 
   res.status(200).json({ message: message_2 });
 });

@@ -38,19 +38,19 @@ const getAllLecture = catchAsync(async (req, res, next) => {
 const getLectureById = catchAsync(async (req, res, next) => {
   let { id } = req.params;
 
-  let Lecture = await lectureModel.find({_id:id});
+  let results = await lectureModel.find({_id:id});
   let message_1 = " Lecture not found!"
   if(req.query.lang == "ar"){
     message_1 = "المحاضرة غير موجود!"
   }
-  if (!Lecture || Lecture.length === 0) {
+  if (!results || results.length === 0) {
     return res.status(404).json({ message: message_1 });
   }
-  Lecture = JSON.stringify(Lecture);
-  Lecture = JSON.parse(Lecture);
-Lecture=Lecture[0]
+  results = JSON.stringify(results);
+  results = JSON.parse(results);
+results=results[0]
 
-  res.status(200).json({ message: "Done", Lecture });
+  res.status(200).json({ message: "Done", results });
 });
 const updateLecture = catchAsync(async (req, res, next) => {
   let { id } = req.params;

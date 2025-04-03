@@ -29,11 +29,14 @@ const subjectSchema = mongoose.Schema(
     },
     isFirstTerm: {
       type: Boolean,
-      default: true,
     },
   },
   { timestamps: true }
 );
 
+subjectSchema.pre(/^find/, function () {
+  this.populate("faculty");
+  this.populate("doctors");
+});
 
 export const subjectModel = mongoose.model("subject", subjectSchema);

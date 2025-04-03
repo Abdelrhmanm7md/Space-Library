@@ -55,20 +55,11 @@ const updateUser = catchAsync(async (req, res, next) => {
   results && res.json({ message: message, results });
 });
 
-const exportUsers = catchAsync(async (req, res, next) => {
-  let ApiFeat = new ApiFeature(userModel.find(), req.query);
-  let results = await ApiFeat.mongooseQuery;
-
-  res.json({
-    message: "Done",
-    results,
-  });
-});
 
 const deleteUser = catchAsync(async (req, res, next) => {
   let { id } = req.params;
 
-  let user = await userModel.findById(id);
+  let user = await userModel.findByIdAndDelete(id);
   let message_1 = "Couldn't delete! Not found!";
   let message_2 = "User deleted successfully!";
   if (req.query.lang == "ar") {
@@ -79,9 +70,7 @@ const deleteUser = catchAsync(async (req, res, next) => {
     return res.status(404).json({ message: message_1 });
   }
 
-  await user.deleteOne();
-
   res.status(200).json({ message: message_2 });
 });
 
-export { getAllUsersByAdmin, getUserById, updateUser, exportUsers, deleteUser };
+export { getAllUsersByAdmin, getUserById, updateUser, deleteUser };

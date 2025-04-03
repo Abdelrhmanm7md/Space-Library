@@ -67,7 +67,7 @@ const updateFaculty = catchAsync(async (req, res, next) => {
 const deleteFaculty = catchAsync(async (req, res, next) => {
   let { id } = req.params;
 
-  let Faculty = await facultyModel.findById(id);
+  let Faculty = await facultyModel.findByIdAndDelete(id)
   let message_1 = "Couldn't delete! Not found!";
   let message_2 = "Faculty deleted successfully!";
   if (req.query.lang == "ar") {
@@ -77,9 +77,6 @@ const deleteFaculty = catchAsync(async (req, res, next) => {
   if (!Faculty) {
     return res.status(404).json({ message: message_1 });
   }
-
-  Faculty.userId = req.userId;
-  await Faculty.deleteOne();
 
   res.status(200).json({ message: message_2 });
 });

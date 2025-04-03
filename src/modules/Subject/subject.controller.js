@@ -29,26 +29,25 @@ const getAllSubject = catchAsync(async (req, res, next) => {
 const getSubjectById = catchAsync(async (req, res, next) => {
   let { id } = req.params;
 
-  let Subject = await subjectModel.find({_id:id});
+  let results = await subjectModel.find({_id:id});
   let message_1 = " Subject not found!"
   if(req.query.lang == "ar"){
     message_1 = "الفرع غير موجود!"
   }
-  if (!Subject || Subject.length === 0) {
+  if (!results || results.length === 0) {
     return res.status(404).json({ message: message_1 });
   }
-  Subject = JSON.stringify(Subject);
-  Subject = JSON.parse(Subject);
-Subject=Subject[0]
+  results = JSON.stringify(results);
+  results = JSON.parse(results);
+results=results[0]
 
-  res.status(200).json({ message: "Done", Subject });
+  res.status(200).json({ message: "Done", results });
 });
 const getSubjectsByDoctor  = catchAsync(async (req, res, next) => {
   try {
     let { id } = req.params;
 
-    // Find subjects where the doctor is in the `doctors` array
-    const results = await subjectModel.find({ doctors: id }).populate("faculty");
+    const results = await subjectModel.find({ doctors: id });
 
     res.json({ message: "success", results });
   } catch (error) {
@@ -57,33 +56,47 @@ const getSubjectsByDoctor  = catchAsync(async (req, res, next) => {
 });
 const updateSubject = catchAsync(async (req, res, next) => {
   let { id } = req.params;
-  if(req.body.term == "one"){
-    req.body.isFirstTerm = true
-  }else{
-    req.body.isFirstTerm = false
+
+  req.body.isFirstTerm = req.body.term === "one";
+
+  if (req.body.pushDoctors && Array.isArray(req.body.pushDoctors)) {
+    req.body.pushDoctors.forEach(doctorId => {
+      updatedSubject = subjectModel.findByIdAndUpdate(id, {
+        $push: { doctors: { $each: doctorId } }
+      }, { new: true });
+    });
   }
+
+  if (req.body.pullDoctors && Array.isArray(req.body.pullDoctors)) {
+    req.body.pullDoctors.forEach(doctorId => {
+      updatedSubject = subjectModel.findByIdAndUpdate(id, {
+        $pull: { doctors: doctorId }
+      }, { new: true });
+    });
+  }
+
   let updatedSubject = await subjectModel.findByIdAndUpdate(id, req.body, {
-    new: true,userId: req.userId, context: { query: req.query }
+    new: true, userId: req.userId, context: { query: req.query }
   });
-  let message_1 = "Couldn't update!  not found!"
-  let message_2 = "Subject updated successfully!"
-  if(req.query.lang == "ar"){
-    message_1 = "تعذر التحديث! غير موجود!"
-    message_2 = "تم تحديث الفرع بنجاح!"
+
+  let message_1 = "Couldn't update! Not found!";
+  let message_2 = "Subject updated successfully!";
+  if (req.query.lang == "ar") {
+    message_1 = "تعذر التحديث! غير موجود!";
+    message_2 = "تم تحديث الفرع بنجاح!";
   }
+
   if (!updatedSubject) {
     return res.status(404).json({ message: message_1 });
   }
 
-  res
-    .status(200)
-    .json({ message: message_2, updatedSubject });
+  res.status(200).json({ message: message_2, updatedSubject });
 });
+
 const deleteSubject = catchAsync(async (req, res, next) => {
   let { id } = req.params;
 
-  // Find the Subject first
-  let Subject = await subjectModel.findById(id);
+  let Subject = await subjectModel.findByIdAndDelete(id);
   let message_1 = "Couldn't delete! Not found!"
   let message_2 = "Subject deleted successfully!"
   if(req.query.lang == "ar"){
@@ -94,7 +107,6 @@ const deleteSubject = catchAsync(async (req, res, next) => {
     return res.status(404).json({ message: message_1 });
   }
 
-  await Subject.deleteOne();
 
   res.status(200).json({ message: message_2 });
 });

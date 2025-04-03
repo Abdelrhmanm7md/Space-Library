@@ -7,7 +7,6 @@ import * as usersController from "./users.controller.js";
 import { protectRoutes , allowTo } from "../auth/auth.controller.js";
 
 usersRouter.get("/",protectRoutes, usersController.getAllUsersByAdmin);
-usersRouter.get("/export/",protectRoutes, usersController.exportUsers);
 
 usersRouter.get("/:id",protectRoutes, usersController.getUserById);
 

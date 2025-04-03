@@ -25,17 +25,17 @@ const getAllPriceList = catchAsync(async (req, res, next) => {
 const getPriceListById = catchAsync(async (req, res, next) => {
   let { id } = req.params;
 
-  let PriceList = await priceListModel.findById(id);
+  let results = await priceListModel.findById(id);
   let message_1 = "No PriceList was found!"
   if(req.query.lang == "ar"){
     message_1 = "لم يتم العثور على اللون!"
   }
-  if (!PriceList || PriceList.length === 0) {
+  if (!results || results.length === 0) {
     return res.status(404).json({ message: message_1 });
   }
 
 
-  res.status(200).json({ message: "Done", PriceList });
+  res.status(200).json({ message: "Done", results });
 });
 const updatePriceList = catchAsync(async (req, res, next) => {
   let { id } = req.params;
@@ -60,8 +60,7 @@ const updatePriceList = catchAsync(async (req, res, next) => {
 const deletePriceList = catchAsync(async (req, res, next) => {
   let { id } = req.params;
   
-  // Find the PriceList first
-  let PriceList = await priceListModel.findById(id);
+  let PriceList = await priceListModel.findByIdAndDelete(id);
   let message_1 = "Couldn't delete! Not found!"
   let message_2 = "PriceList deleted successfully!"
   if(req.query.lang == "ar"){
@@ -71,8 +70,6 @@ const deletePriceList = catchAsync(async (req, res, next) => {
   if (!PriceList) {
     return res.status(404).json({ message: message_1 });
   }
-
-  await PriceList.deleteOne();
 
   res.status(200).json({ message: message_2});
 });
