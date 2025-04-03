@@ -27,6 +27,10 @@ const subjectSchema = mongoose.Schema(
       ref: "doctor",
       required: true,
     },
+    isFirstTerm: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: true }
 );
