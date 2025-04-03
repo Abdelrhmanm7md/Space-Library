@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { removeFile } from "../../src/utils/removeFiles.js";
+import { removeFiles } from "../../src/utils/removeFiles.js";
 
 const lectureSchema = mongoose.Schema(
   {
@@ -52,8 +52,9 @@ lectureSchema.pre(
   async function () {
     const doc = await this.model.findOne(this.getFilter());
     if (doc) {
-      doc.gallery &&
-        doc.gallery.forEach((image) => removeFile("gallery", image));
+        if(doc.gallery){
+          removeFiles("gallery", doc.gallery);
+        }
     }
   }
 );
