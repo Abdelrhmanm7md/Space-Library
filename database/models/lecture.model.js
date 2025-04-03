@@ -46,18 +46,15 @@ lectureSchema.post("find", async function (docs) {
   }
 });
 
-lectureSchema.pre(
-  /^delete/,
-  { document: false, query: true },
-  async function () {
-    const doc = await this.model.findOne(this.getFilter());
-    if (doc) {
-        if(doc.gallery){
-          removeFiles("gallery", doc.gallery);
-        }
-    }
+lectureSchema.pre("findOneAndDelete", async function (next) {
+  const doc = await this.model.findOne(this.getFilter()); // Get the document before deletion
+
+  if (doc && doc.gallery && doc.gallery.length) {
+    removeFiles("gallery", doc.gallery); // Ensure this function works correctly
   }
-);
+
+  next(); 
+});
 
 lectureSchema.pre(/^find/, function () {
   this.populate("faculty");
