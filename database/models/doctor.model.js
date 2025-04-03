@@ -15,7 +15,6 @@ const doctorSchema = mongoose.Schema(
     subjects: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: "subject",
-      required: true,
     },
   },
   { timestamps: true }
