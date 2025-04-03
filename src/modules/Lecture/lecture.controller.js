@@ -1,8 +1,21 @@
 import { lectureModel } from "../../../database/models/lecture.model.js";
 import ApiFeature from "../../utils/apiFeature.js";
 import catchAsync from "../../utils/middleWare/catchAsyncError.js";
+import { photoUpload } from "../../utils/removeFiles.js";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 const createLecture = catchAsync(async (req, res, next) => {
+  let gallery = photoUpload(req, "gallery", "gallery");
+  // gallery = gallery.replace(`${process.env.HOST}`, "");
+  req.body.gallery = gallery || []
+  let message_1 = " max 5 images"
+  if(req.query.lang == "ar"){
+    message_1 = "الحد الأقصى 5 صور"
+  }
+  if(req.body.gallery.length > 5) {
+    return res.status(400).json({ message: message_1 });
+  }
     let newLecture = new lectureModel(req.body);
     let addedLecture = await newLecture.save({ context: { query: req.query } });
     res.status(201).json({
@@ -27,7 +40,7 @@ const getLectureById = catchAsync(async (req, res, next) => {
   let Lecture = await lectureModel.find({_id:id});
   let message_1 = " Lecture not found!"
   if(req.query.lang == "ar"){
-    message_1 = "الفرع غير موجود!"
+    message_1 = "المحاضرة غير موجود!"
   }
   if (!Lecture || Lecture.length === 0) {
     return res.status(404).json({ message: message_1 });
@@ -40,44 +53,62 @@ Lecture=Lecture[0]
 });
 const updateLecture = catchAsync(async (req, res, next) => {
   let { id } = req.params;
-  if(req.body.term == "one"){
-    req.body.isFirstTerm = true
-  }else{
-    req.body.isFirstTerm = false
+
+  if (req.body.gallery) {
+    let newImages = photoUpload(req, "gallery", "gallery"); // Upload new images
+    let err_1 = " max 5 images";
+    let err_2 =  "Lecture not found!";
+    if (req.query.lang == "ar") {
+      err_1 = "الحد الأقصى 5 صور";
+      err_2 = "المحاضرة غير موجودة!";
+    }
+
+    // Fetch the existing lecture
+    let existingLecture = await lectureModel.findById(id);
+    if (!existingLecture) {
+      return res.status(404).json({ message: err_2 });
+    }
+
+    let updatedGallery = [...existingLecture.gallery, ...newImages];
+
+    if (updatedGallery.length > 5) {
+      return res.status(400).json({ message: err_1 });
+    }
+
+    req.body.gallery = updatedGallery; 
   }
+
   let updatedLecture = await lectureModel.findByIdAndUpdate(id, req.body, {
-    new: true,userId: req.userId, context: { query: req.query }
+    new: true,
   });
-  let message_1 = "Couldn't update!  not found!"
-  let message_2 = "Lecture updated successfully!"
-  if(req.query.lang == "ar"){
-    message_1 = "تعذر التحديث! غير موجود!"
-    message_2 = "تم تحديث الفرع بنجاح!"
+
+  let message_1 = "Couldn't update! Not found!";
+  let message_2 = "Lecture updated successfully!";
+  if (req.query.lang == "ar") {
+    message_1 = "تعذر التحديث! غير موجود!";
+    message_2 = "تم تحديث المحاضرة بنجاح!";
   }
+
   if (!updatedLecture) {
     return res.status(404).json({ message: message_1 });
   }
 
-  res
-    .status(200)
-    .json({ message: message_2, updatedLecture });
+  res.status(200).json({ message: message_2, updatedLecture });
 });
+
 const deleteLecture = catchAsync(async (req, res, next) => {
   let { id } = req.params;
 
-  // Find the Lecture first
-  let Lecture = await lectureModel.findById(id);
+  let Lecture = await lectureModel.findByIdAndDelete(id);
   let message_1 = "Couldn't delete! Not found!"
   let message_2 = "Lecture deleted successfully!"
   if(req.query.lang == "ar"){
     message_1 = "تعذر الحذف! غير موجود!"
-    message_2 = "تم حذف الفرع بنجاح!"
+    message_2 = "تم حذف المحاضرة بنجاح!"
   }
   if (!Lecture) {
     return res.status(404).json({ message: message_1 });
   }
-
-  await Lecture.deleteOne();
 
   res.status(200).json({ message: message_2 });
 });

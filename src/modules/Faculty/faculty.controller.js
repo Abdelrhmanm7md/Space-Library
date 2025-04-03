@@ -18,6 +18,10 @@ const getAllFaculty = catchAsync(async (req, res, next) => {
   let ApiFeat = new ApiFeature(facultyModel.find(), req.query);
 
   let results = await ApiFeat.mongooseQuery;
+  results = {
+    en: results.map(faculty => ({ _id: faculty._id, name: faculty.name })),
+    ar: results.map(faculty => ({ _id: faculty._id, nameAR: faculty.nameAR }))
+  };
   res.json({ message: "Done", results });
 });
 

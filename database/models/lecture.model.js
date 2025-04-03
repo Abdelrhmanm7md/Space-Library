@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { removeFile } from "../../src/utils/removeFiles.js";
 
 const lectureSchema = mongoose.Schema(
   {
@@ -36,5 +37,30 @@ const lectureSchema = mongoose.Schema(
   { timestamps: true }
 );
 
+lectureSchema.post("find", async function (docs) {
+  if (!docs.length) return;
+  for (const doc of docs) {
+    if (!doc.isAvailable) {
+      delete doc._doc.gallery;
+    }
+  }
+});
 
+lectureSchema.pre(
+  /^delete/,
+  { document: false, query: true },
+  async function () {
+    const doc = await this.model.findOne(this.getFilter());
+    if (doc) {
+      doc.gallery &&
+        doc.gallery.forEach((image) => removeFile("gallery", image));
+    }
+  }
+);
+
+lectureSchema.pre(/^find/, function () {
+  this.populate("faculty");
+  this.populate("subject");
+  this.populate("doctor");
+});
 export const lectureModel = mongoose.model("lecture", lectureSchema);
