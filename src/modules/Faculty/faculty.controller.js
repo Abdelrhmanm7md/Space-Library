@@ -16,16 +16,6 @@ const createFaculty = catchAsync(async (req, res, next) => {
 
 const getAllFaculty = catchAsync(async (req, res, next) => {
   let ApiFeat = new ApiFeature(facultyModel.find(), req.query);
-  // .pagination()
-  // .filter()
-  // .sort()
-  // .search()
-  // .fields();
-  //     let message_1 = "No Faculty was found!"
-  //     if(req.query.lang == "ar"){
-  //       message_1 = "لم يتم العثور على العلامة التجارية!"
-  //     }
-  //  !ApiFeat && res.status(404).json({ message: message_1 });
 
   let results = await ApiFeat.mongooseQuery;
   res.json({ message: "Done", results });

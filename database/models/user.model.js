@@ -57,11 +57,6 @@ const userSchema = mongoose.Schema(
     verificationCode: {
       type: String,
     },
-    zone:{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "priceList",
-      // required: true,
-    },
   },
   { timestamps: true }
 );
@@ -69,7 +64,7 @@ const userSchema = mongoose.Schema(
 userSchema.set("toJSON", {
   transform: function (doc, ret, options) {
       if (!options.showVerificationCode) {
-          delete ret.verificationCode;  // Remove verificationCode unless specified
+          delete ret.verificationCode;
       }
       return ret;
   }

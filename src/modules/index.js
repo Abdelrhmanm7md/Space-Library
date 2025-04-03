@@ -4,6 +4,7 @@ import usersRouter from "./users/users.routes.js";
 import subjectRouter from "./Subject/subject.routes.js";
 import priceListRouter from "./PriceList/priceList.routes.js";
 import doctorRouter from "./Doctor/doctor.routes.js";
+import lectureRouter from "./Lecture/lecture.routes.js";
 export function init(app) {
   app.use("/api/v1/users", usersRouter);
   app.use("/api/v1/auth", authRouter);
@@ -11,6 +12,7 @@ export function init(app) {
   app.use("/api/v1/price", priceListRouter);
   app.use("/api/v1/subject", subjectRouter);
   app.use("/api/v1/doctor", doctorRouter);
+  app.use("/api/v1/lecture", lectureRouter);
 
 
   app.use("/", (req, res, next) => {

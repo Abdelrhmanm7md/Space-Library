@@ -6,6 +6,10 @@ const facultySchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    nameAR: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );

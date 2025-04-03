@@ -29,7 +29,6 @@ const getAllSubject = catchAsync(async (req, res, next) => {
 const getSubjectById = catchAsync(async (req, res, next) => {
   let { id } = req.params;
 
-  let products = await productModel.find({ productVariations: { $elemMatch: { Subject: id } } });
   let Subject = await subjectModel.find({_id:id});
   let message_1 = " Subject not found!"
   if(req.query.lang == "ar"){
@@ -42,8 +41,19 @@ const getSubjectById = catchAsync(async (req, res, next) => {
   Subject = JSON.parse(Subject);
 Subject=Subject[0]
 
-Subject.products = products;
   res.status(200).json({ message: "Done", Subject });
+});
+const getSubjectsByDoctor  = catchAsync(async (req, res, next) => {
+  try {
+    let { id } = req.params;
+
+    // Find subjects where the doctor is in the `doctors` array
+    const results = await subjectModel.find({ doctors: id }).populate("faculty");
+
+    res.json({ message: "success", results });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching subjects", error: error.message });
+  }
 });
 const updateSubject = catchAsync(async (req, res, next) => {
   let { id } = req.params;
@@ -95,4 +105,5 @@ export {
   getSubjectById,
   deleteSubject,
   updateSubject,
+  getSubjectsByDoctor,
 };
