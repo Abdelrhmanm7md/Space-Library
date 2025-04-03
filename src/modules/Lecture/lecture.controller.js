@@ -7,7 +7,7 @@ dotenv.config();
 
 const createLecture = catchAsync(async (req, res, next) => {
   let gallery = photoUpload(req, "gallery", "gallery");
-  // gallery = gallery.replace(`${process.env.HOST}`, "");
+  gallery = gallery.replace(`${process.env.HOST}`, "");
   req.body.gallery = gallery || []
   let message_1 = " max 5 images"
   if(req.query.lang == "ar"){
@@ -56,6 +56,7 @@ const updateLecture = catchAsync(async (req, res, next) => {
 
   if (req.body.gallery) {
     let newImages = photoUpload(req, "gallery", "gallery"); // Upload new images
+    newImages = newImages.replace(`${process.env.HOST}`, "");
     let err_1 = " max 5 images";
     let err_2 =  "Lecture not found!";
     if (req.query.lang == "ar") {
