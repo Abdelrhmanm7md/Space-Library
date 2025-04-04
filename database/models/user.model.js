@@ -13,25 +13,21 @@ const userSchema = mongoose.Schema(
       trim: true,
       required: [true, "Email is a required field."],
       minLength: 6,
-      unique: [true, "Email must be unique."],
     },
     firstPhone: {
       type: String,
       required: [true, "Phone is a required field."],
       minLength: [10, "phone is too short."],
-      unique: [true, "Phone must be unique."],
     },
     secondPhone: {
       type: String,
       // required: [true, "Phone is a required field."],
       minLength: [10, "phone is too short."],
-      unique: [true, "Phone must be unique."],
     },
     password: {
       type: String,
       required: [true, "Phone is a required field."],
       minLength: [8, "password is too short , min length 8."],
-      unique: [true, "Password must be unique."],
     },
     userType: {
       type: String,
