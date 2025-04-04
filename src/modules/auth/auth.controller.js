@@ -82,16 +82,12 @@ export const signIn = catchAsync(async (req, res, next) => {
 });
 export const sendOTP = catchAsync(async (req, res, next) => {
   let err_email = "this email  is not found";
-  let err_email2 = "this email  is not valid";
   let text = `Email Verification Code: `;
   if (req.query.lang == "ar") {
     err_email = "البريد الالكتروني غير موجود";
-    err_email2 = "هذا البريد الالكتروني غير صحيح";
     text = ` : رمز التحقق من البريد الالكتروني: `;
   }
-  let emailFormat = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-  if (req.body.email !== "" && req.body.email.match(emailFormat)) {
-    let { email } = req.body;
+  let email = req.user.email
     let userData = await userModel.findOne({ email });
     if (userData) {
       userData.verificationCode = generateUniqueId({
@@ -106,9 +102,6 @@ export const sendOTP = catchAsync(async (req, res, next) => {
       return res.json({ message: "success", lastSignIn });
     }
     return res.status(401).json({ message: err_email });
-  } else {
-    return res.status(409).json({ message: err_email2 });
-  }
 });
 
 

@@ -10,7 +10,7 @@ const lectureSchema = mongoose.Schema(
     },
     studyYear: {
       type: String,
-      enum: ["one", "two", "three", "four", "five"],
+      enum: ["1", "2", "3", "4", "5"],
       required: true,
     },
     faculty: {

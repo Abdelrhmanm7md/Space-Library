@@ -22,10 +22,6 @@ export const registerValidationSchema = Joi.object({
     'string.pattern.base': `"phoneNumber" should contain only digits`,
     'any.required': `"phoneNumber" is a required field`
   }),
-  studyYear: Joi.string().valid('one', 'two', 'three', 'four', 'five').required().messages({
-    'any.only': `"studyYear" must be one of ['one', 'two', 'three', 'four', 'five']`,
-    'any.required': `"studyYear" is a required field`
-  }),
   faculty: Joi.string().length(24).required().messages({
     'string.length': `"faculty" must be a valid MongoDB ObjectId (24 characters)`,
     'any.required': `"faculty" is a required field`

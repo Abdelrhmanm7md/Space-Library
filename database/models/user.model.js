@@ -39,11 +39,6 @@ const userSchema = mongoose.Schema(
       default: "student",
       required: true,
     },
-    studyYear: {
-      type: String,
-      enum: ["one", "two", "three", "four", "five"],
-      required: true,
-    },
     isApproved: {
       type: Boolean,
       default: false,

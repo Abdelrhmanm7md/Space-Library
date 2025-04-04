@@ -7,7 +7,7 @@ import { loginValidationSchema, registerValidationSchema } from "./auth.validato
 
 authRouter.post("/signup", validation(registerValidationSchema), authController.signUp);
 authRouter.post("/signin",validation(loginValidationSchema), authController.signIn);
-authRouter.get("/otp", authController.sendOTP);
+authRouter.post("/otp",authController.protectRoutes, authController.sendOTP);
 authRouter.post("/vierfy", authController.protectRoutes ,authController.vierfyVerificationCode);
 authRouter.post("/forget", authController.forgetPassword);
 
