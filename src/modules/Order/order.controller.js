@@ -31,6 +31,12 @@ const getAllOrder = catchAsync(async (req, res, next) => {
   let results = await ApiFeat.mongooseQuery;
   res.json({ message: "Done", results });
 });
+const getAllOrderByStudent = catchAsync(async (req, res, next) => {
+  let ApiFeat = new ApiFeature(orderModel.find({ student: req.params.id }), req.query);
+
+  let results = await ApiFeat.mongooseQuery;
+  res.json({ message: "Done", results });
+});
 
 const getOrderById = catchAsync(async (req, res, next) => {
   let { id } = req.params;
@@ -85,6 +91,7 @@ const updateOrder = catchAsync(async (req, res, next) => {
     }
 
     const deliveryPrice = checkZone.price;
+    req.body.deliveryPrice = deliveryPrice;
     const updatedPrice =
       typeof req.body.price === "number" ? req.body.price : existingOrder.price;
     req.body.totalAmount = deliveryPrice + updatedPrice;
@@ -125,4 +132,4 @@ const deleteOrder = catchAsync(async (req, res, next) => {
   res.status(200).json({ message: message_2 });
 });
 
-export { createOrder, getAllOrder, getOrderById, deleteOrder, updateOrder };
+export { createOrder, getAllOrder, getAllOrderByStudent, getOrderById, deleteOrder, updateOrder };

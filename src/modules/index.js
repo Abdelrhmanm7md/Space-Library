@@ -6,6 +6,7 @@ import priceListRouter from "./PriceList/priceList.routes.js";
 import doctorRouter from "./Doctor/doctor.routes.js";
 import lectureRouter from "./Lecture/lecture.routes.js";
 import orderRouter from "./Order/order.routes.js";
+import notificationRouter from "./Notification/notification.routes.js";
 export function init(app) {
   app.use("/api/v1/users", usersRouter);
   app.use("/api/v1/auth", authRouter);
@@ -15,6 +16,7 @@ export function init(app) {
   app.use("/api/v1/doctor", doctorRouter);
   app.use("/api/v1/lecture", lectureRouter);
   app.use("/api/v1/order", orderRouter);
+  app.use("/api/v1/notification", notificationRouter);
 
 
   app.use("/", (req, res, next) => {
