@@ -24,7 +24,7 @@ const io = new Server(httpServer, {
 const app = express();
 
 const corsOptions = {
-  origin: "http://69.62.121.22:8000", // frontend IP + port
+  origin: "*", // frontend IP + port
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
