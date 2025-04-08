@@ -24,9 +24,9 @@ const io = new Server(httpServer, {
 const app = express();
 
 const corsOptions = {
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed methods
-  credentials: true, // Allow credentials to be sent with requests
+  origin: "http://69.62.121.22:8000", // frontend IP + port
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true,
 };
 app.use(cors(corsOptions));
 app.use(hpp());  // Prevent HTTP Parameter Pollution  --> in case of query string parameters
