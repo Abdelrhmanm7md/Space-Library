@@ -46,11 +46,7 @@ results=results[0]
 const getSubjectByYear = catchAsync(async (req, res, next) => {
   let { facultyId , year } = req.params;
 
-  let results = await subjectModel.find({facultyId:facultyId, studyYear:year});
-  console.log(results,"results");
-  console.log(facultyId,"facultyId");
-  console.log(year,"year");
-  
+  let results = await subjectModel.find({faculty:facultyId, studyYear:year});
 
   let message_1 = " Subject not found!"
   if(req.query.lang == "ar"){
