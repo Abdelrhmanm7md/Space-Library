@@ -32,6 +32,10 @@ const lectureSchema = mongoose.Schema(
       type: Boolean,
       required: true,
     },
+    price: {
+      type: Number,
+      required: true,
+    },
     gallery: [String],
   },
   { timestamps: true }
