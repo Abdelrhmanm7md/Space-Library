@@ -51,7 +51,7 @@ const getSubjectByYear = catchAsync(async (req, res, next) => {
   if(req.query.lang == "ar"){
     message_1 = "المادة غير موجود!"
   }
-  if (!results || results.length === 0) {
+  if (!results) {
     return res.status(404).json({ message: message_1 });
   }
   results = JSON.parse(JSON.stringify(results));
