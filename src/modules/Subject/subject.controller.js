@@ -32,7 +32,7 @@ const getSubjectById = catchAsync(async (req, res, next) => {
   let results = await subjectModel.find({_id:id});
   let message_1 = " Subject not found!"
   if(req.query.lang == "ar"){
-    message_1 = "الفرع غير موجود!"
+    message_1 = "المادة غير موجود!"
   }
   if (!results || results.length === 0) {
     return res.status(404).json({ message: message_1 });
@@ -40,6 +40,21 @@ const getSubjectById = catchAsync(async (req, res, next) => {
   results = JSON.stringify(results);
   results = JSON.parse(results);
 results=results[0]
+
+  res.status(200).json({ message: "Done", results });
+});
+const getSubjectByYear = catchAsync(async (req, res, next) => {
+  let { facultyId , year } = req.params;
+
+  let results = await subjectModel.find({facultyId:facultyId, studyYear:year});
+  let message_1 = " Subject not found!"
+  if(req.query.lang == "ar"){
+    message_1 = "المادة غير موجود!"
+  }
+  if (!results || results.length === 0) {
+    return res.status(404).json({ message: message_1 });
+  }
+  results = JSON.parse(JSON.stringify(results));
 
   res.status(200).json({ message: "Done", results });
 });
@@ -81,7 +96,7 @@ const updateSubject = catchAsync(async (req, res, next) => {
   let message_2 = "Subject updated successfully!";
   if (req.query.lang == "ar") {
     message_1 = "تعذر التحديث! غير موجود!";
-    message_2 = "تم تحديث الفرع بنجاح!";
+    message_2 = "تم تحديث المادة بنجاح!";
   }
 
   if (!updatedSubject) {
@@ -99,7 +114,7 @@ const deleteSubject = catchAsync(async (req, res, next) => {
   let message_2 = "Subject deleted successfully!"
   if(req.query.lang == "ar"){
     message_1 = "تعذر الحذف! غير موجود!"
-    message_2 = "تم حذف الفرع بنجاح!"
+    message_2 = "تم حذف المادة بنجاح!"
   }
   if (!Subject) {
     return res.status(404).json({ message: message_1 });
@@ -113,6 +128,7 @@ export {
   createSubject,
   getAllSubject,
   getSubjectById,
+  getSubjectByYear,
   deleteSubject,
   updateSubject,
   getSubjectsByDoctor,

@@ -52,6 +52,20 @@ results=results[0]
 
   res.status(200).json({ message: "Done", results });
 });
+const getLecturesBySubject = catchAsync(async (req, res, next) => {
+  let { id } = req.params;
+
+  let results = await lectureModel.find({subject:id});
+  let message_1 = " Lecture not found!"
+  if(req.query.lang == "ar"){
+    message_1 = "المحاضرة غير موجود!"
+  }
+  if (!results) {
+    return res.status(404).json({ message: message_1 });
+  }
+  results = JSON.parse(JSON.stringify(results));
+  res.status(200).json({ message: "Done", results });
+});
 const updateLecture = catchAsync(async (req, res, next) => {
   let { id } = req.params;
 
@@ -119,6 +133,7 @@ export {
   createLecture,
   getAllLecture,
   getLectureById,
+  getLecturesBySubject,
   deleteLecture,
   updateLecture,
 };
