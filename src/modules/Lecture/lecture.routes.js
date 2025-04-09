@@ -11,6 +11,7 @@ import {
 lectureRouter.get("/", protectRoutes, lectureController.getAllLecture);
 lectureRouter.get("/:id", protectRoutes, lectureController.getLectureById);
 lectureRouter.get("/subject/:id", protectRoutes, lectureController.getLecturesBySubject);  
+lectureRouter.get("/doctor/:id", protectRoutes, lectureController.getLecturesByDoctor);  
 lectureRouter.put("/:id", protectRoutes, lectureController.updateLecture);
 lectureRouter.post(
   "/",

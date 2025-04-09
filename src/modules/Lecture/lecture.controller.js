@@ -66,6 +66,20 @@ const getLecturesBySubject = catchAsync(async (req, res, next) => {
   results = JSON.parse(JSON.stringify(results));
   res.status(200).json({ message: "Done", results });
 });
+const getLecturesByDoctor = catchAsync(async (req, res, next) => {
+  let { id } = req.params;
+
+  let results = await lectureModel.find({doctor:id});
+  let message_1 = " doctor not found!"
+  if(req.query.lang == "ar"){
+    message_1 = "الدكتور غير موجود!"
+  }
+  if (!results) {
+    return res.status(404).json({ message: message_1 });
+  }
+  results = JSON.parse(JSON.stringify(results));
+  res.status(200).json({ message: "Done", results });
+});
 const updateLecture = catchAsync(async (req, res, next) => {
   let { id } = req.params;
 
@@ -134,6 +148,7 @@ export {
   getAllLecture,
   getLectureById,
   getLecturesBySubject,
+  getLecturesByDoctor,
   deleteLecture,
   updateLecture,
 };
