@@ -79,20 +79,20 @@ const getDoctorsBySubjectId = catchAsync(async (req, res, next) => {
     const results = await subjectModel
       .findById(id)
       .select("doctors")
-      .populate("doctors");
-    results = JSON.stringify(results);
-    results = JSON.parse(results);
-    if(!results) {
+      .populate("doctors", "_id name");
+
+    if (!results) {
       return res.status(404).json({ message: "Subject not found!" });
     }
-    results = results.doctors;
-    res.json({ message: "success", results });
+
+    res.json({ message: "success", results: results.doctors });
   } catch (error) {
     res
       .status(500)
       .json({ message: "Error fetching subjects", error: error.message });
   }
 });
+
 const updateSubject = catchAsync(async (req, res, next) => {
   let { id } = req.params;
 
