@@ -77,10 +77,15 @@ const getDoctorsBySubjectId = catchAsync(async (req, res, next) => {
     let { id } = req.params;
 
     const results = await subjectModel
-      .find({ _id: id })
+      .findById(id)
       .select("doctors")
       .populate("doctors");
-
+    results = JSON.stringify(results);
+    results = JSON.parse(results);
+    if(!results) {
+      return res.status(404).json({ message: "Subject not found!" });
+    }
+    results = results.doctors;
     res.json({ message: "success", results });
   } catch (error) {
     res

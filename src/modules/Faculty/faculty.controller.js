@@ -34,7 +34,7 @@ const getFacultyById = catchAsync(async (req, res, next) => {
   if (req.query.lang == "ar") {
     message_1 = "العلامة التجارية غير موجودة!";
   }
-  if (!Faculty || Faculty.length === 0) {
+  if (!Faculty) {
     return res.status(404).json({ message: message_1 });
   }
 

@@ -20,6 +20,13 @@ const getAllDoctor = catchAsync(async (req, res, next) => {
 
 });
 
+const getDoctorsByfacultyId = catchAsync(async (req, res, next) => {
+  let ApiFeat = new ApiFeature(doctorModel.find({faculty: req.params.id}), req.query);
+
+  let results = await ApiFeat.mongooseQuery;
+
+  res.json({ message: "Done", results });
+});
 
 const getDoctorById = catchAsync(async (req, res, next) => {
   let { id } = req.params;
@@ -79,6 +86,7 @@ export {
   createDoctor,
   getAllDoctor,
   getDoctorById,
+  getDoctorsByfacultyId,
   deleteDoctor,
   updateDoctor,
 };
