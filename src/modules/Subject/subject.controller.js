@@ -59,6 +59,24 @@ const getSubjectByYear = catchAsync(async (req, res, next) => {
 
   res.status(200).json({ message: "Done", results });
 });
+const getSubjectByFaculty = catchAsync(async (req, res, next) => {
+  let { facultyId } = req.params;
+
+  let results = await subjectModel.find({
+    faculty: facultyId,
+  });
+
+  let message_1 = " Subject not found!";
+  if (req.query.lang == "ar") {
+    message_1 = "المادة غير موجود!";
+  }
+  if (!results) {
+    return res.status(404).json({ message: message_1 });
+  }
+  results = JSON.parse(JSON.stringify(results));
+
+  res.status(200).json({ message: "Done", results });
+});
 const getSubjectsByDoctor = catchAsync(async (req, res, next) => {
   try {
     let { id } = req.params;
@@ -162,6 +180,7 @@ export {
   getAllSubject,
   getSubjectById,
   getSubjectByYear,
+  getSubjectByFaculty,
   getDoctorsBySubjectId,
   deleteSubject,
   updateSubject,

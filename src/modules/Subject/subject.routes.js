@@ -12,6 +12,11 @@ subjectRouter.get(
   subjectController.getSubjectByYear
 );
 subjectRouter.get(
+  "/faculty/:facultyId",
+  protectRoutes,
+  subjectController.getSubjectByFaculty
+);
+subjectRouter.get(
   "/doctor/:id",
   protectRoutes,
   subjectController.getSubjectsByDoctor
