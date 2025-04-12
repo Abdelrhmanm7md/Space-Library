@@ -1,3 +1,4 @@
+import { lectureModel } from "../../../database/models/lecture.model.js";
 import { subjectModel } from "../../../database/models/subject.model.js";
 import ApiFeature from "../../utils/apiFeature.js";
 import catchAsync from "../../utils/middleWare/catchAsyncError.js";
@@ -64,6 +65,25 @@ const getSubjectByFaculty = catchAsync(async (req, res, next) => {
 
   let results = await subjectModel.find({
     faculty: facultyId,
+  });
+
+  let message_1 = " Subject not found!";
+  if (req.query.lang == "ar") {
+    message_1 = "المادة غير موجود!";
+  }
+  if (!results) {
+    return res.status(404).json({ message: message_1 });
+  }
+  results = JSON.parse(JSON.stringify(results));
+
+  res.status(200).json({ message: "Done", results });
+});
+const getSubjectsByDoctorAndSubject = catchAsync(async (req, res, next) => {
+  let { doctorId, subjectId } = req.params;
+
+  let results = await lectureModel.find({
+    subject: subjectId,
+    doctor: doctorId,
   });
 
   let message_1 = " Subject not found!";
@@ -181,6 +201,7 @@ export {
   getSubjectById,
   getSubjectByYear,
   getSubjectByFaculty,
+  getSubjectsByDoctorAndSubject,
   getDoctorsBySubjectId,
   deleteSubject,
   updateSubject,

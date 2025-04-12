@@ -17,6 +17,11 @@ subjectRouter.get(
   subjectController.getSubjectByFaculty
 );
 subjectRouter.get(
+  "/lecture/:doctorId/:subjectId",
+  protectRoutes,
+  subjectController.getSubjectsByDoctorAndSubject
+);
+subjectRouter.get(
   "/doctor/:id",
   protectRoutes,
   subjectController.getSubjectsByDoctor
