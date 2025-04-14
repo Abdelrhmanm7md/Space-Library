@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { lectureModel } from "./lecture.model.js";
 
 const subjectSchema = mongoose.Schema(
   {
@@ -33,6 +34,18 @@ const subjectSchema = mongoose.Schema(
   },
   { timestamps: true }
 );
+
+subjectSchema.pre("findOneAndDelete", async function (next) {
+  const doc = await this.model.findOne(this.getFilter()); // Get the document before deletion
+
+  if (doc) {
+    await lectureModel.deleteMany({
+      subject: doc._id,
+    });
+  }
+
+  next();
+});
 
 subjectSchema.pre(/^find/, function () {
   this.populate("faculty");

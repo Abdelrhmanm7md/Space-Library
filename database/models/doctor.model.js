@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import { lectureModel } from "./lecture.model.js";
+import { subjectModel } from "./subject.model.js";
 
 const doctorSchema = mongoose.Schema(
   {
@@ -20,5 +22,20 @@ const doctorSchema = mongoose.Schema(
   { timestamps: true }
 );
 
+doctorSchema.pre("findOneAndDelete", async function (next) {
+  const doc = await this.model.findOne(this.getFilter()); // Get the document before deletion
+
+  if (doc) {
+    await lectureModel.deleteMany({
+      doctor: doc._id,
+    });
+    await subjectModel.updateMany(
+      { doctors: doc._id },
+      { $pull: { doctors: doc._id } }
+    );
+  }
+
+  next();
+});
 
 export const doctorModel = mongoose.model("doctor", doctorSchema);
